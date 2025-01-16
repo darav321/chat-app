@@ -3,6 +3,20 @@ import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken"
 import getUserDetailFromToken from "../helpers/getUserDetailFromToken.js"
 
+const generateAccessAndRefreshToken = async (userid) => {
+    try {
+        const user = await User.findById(userid)
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+
+        user.refreshToken = refreshToken
+        await user.save({validateBeforeSave : false})
+        return {accessToken, refreshToken}
+    } catch (error) {
+        return res.status(500).json({message : "Internal server error"})
+    }
+}
+
 export const registerUser = async (req, res) => {
     try {
         const {name, email, password, profilePic} = req.body
@@ -41,37 +55,64 @@ export const loginUser = async (req, res) => {
         const useremail = await User.findOne({email})
 
         if(!useremail) {
-            res.status(400).json({message : "User does not exists"})
+            return res.status(400).json({message : "User does not exists"})
         }
 
         const verifyPass = await bcryptjs.compare(password, useremail.password)   
         
         if(!verifyPass) {
-            res.status(400).json({message : "Invalid User credentials"})
+            return res.status(400).json({message : "Invalid User credentials"})
         }
 
-        const tokenData = {
-            id : useremail._id,
-            email : useremail.email
-        }
-
-        const token = await jwt.sign(tokenData, process.env.SECRET_KEY, {expiresIn : '1d'})
+        const {accessToken, refreshToken} = await generateAccessAndRefreshToken(useremail._id)
 
         const cookieOptions = {
-            http : true,
+            httpOnly : true,
             secure : true
         }
 
-        res.status(200).cookie('token', token, cookieOptions).json({message : "Login Successfull", token : token})
+        res.status(200).cookie('accessToken', accessToken, cookieOptions).cookie('refreshToken', refreshToken, cookieOptions).json({message : "Login Successfull", accessToken : accessToken, refreshToken : refreshToken})
     } catch (error) {
         console.log("Error while signing in the user")
         res.status(500).json({message : "Internal Server error"})
     }
 }
 
+export const refreshAccessToken = async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+
+    if(!incomingRefreshToken) {
+        return res.status(401).json({message : "Unauthorized request"})
+    }
+    try {
+        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
+
+        const user = await User.findById(decodedToken?._id)
+
+        if(!user) {
+            return res.status(401).json({messgae : "Inavlid refresh token"})
+        }
+
+        if(incomingRefreshToken !== user.refreshToken) {
+            return res.status(401).josn({message : "Refresh token is invalid or used"})
+        }
+
+        const options = {
+            httpOnly : true,
+            secure : true
+        }
+
+        const {accessToken, newRefreshToken} = await generateAccessAndRefreshToken(user._id)
+
+        res.status(200).cookie('accessToken', accessToken, options).cookie('refreshToken', newRefreshToken, options).json({message : "Access Token refreshed", accessToken : accessToken, refreshToken : newRefreshToken})
+    } catch (error) {
+        return res.status(500).json({message : "Invalid refresh token"})
+    }
+}
+
 export const userDetail = async (req, res) => {
     try {
-        const token = req.cookies.token
+        const token = req.cookies.accessToken
 
         const user = await getUserDetailFromToken(token)
 
@@ -84,7 +125,12 @@ export const userDetail = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        res.cookie("token", "", {
+        res.cookie("accessToken", "", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // Only secure in production
+            sameSite: "strict",
+            expires: new Date(0) // Expires immediately
+        }).cookie("refreshToken", "", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // Only secure in production
             sameSite: "strict",
@@ -101,7 +147,7 @@ export const logout = async (req, res) => {
 
 export const userUpdate = async (req, res) => {
     try {
-        const token = req.cookies.token 
+        const token = req.cookies.accessToken 
         const user = await getUserDetailFromToken(token)
         
         const {name, profilePic} = req.body

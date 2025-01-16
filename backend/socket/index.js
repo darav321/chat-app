@@ -22,6 +22,8 @@ io.on('connection',async (socket)=>{
 
     const token = socket.handshake.auth.token
 
+    console.log(token)
+
     const user = await getUserDetailFromToken(token)
 
     socket.join(user?._id?.toString())
@@ -46,8 +48,8 @@ io.on('connection',async (socket)=>{
 
         const getConversation = await Conversation.findOne({
             $or : [
-                {sender:user._id, reciever:userid},
-                {sender:userid, reciever:user._id}
+                {sender:user?._id?.toString(), reciever:userid},
+                {sender:userid, reciever:user?._id?.toString()}
             ]
         }).sort({updatedAt : -1}).populate('messages')
 
@@ -142,8 +144,8 @@ io.on('connection',async (socket)=>{
     socket.on('seen', async(msgByUserId)=>{
         let conversation = await Conversation.findOne({
             $or : [
-                {sender : user._id, reciever : msgByUserId},
-                {sender : msgByUserId, reciever : user._id}
+                {sender : user?._id?.toString(), reciever : msgByUserId},
+                {sender : msgByUserId, reciever : user?._id?.toString()}
             ]
         })
         const conversationMsgId = conversation?.messages || []
@@ -161,7 +163,7 @@ io.on('connection',async (socket)=>{
     })
 
     socket.on('disconnect', () => {
-        onlineUser.delete(user._id)
+        onlineUser.delete(user?._id.toString())
         console.log('disconnect', socket.id)
     })
 })
