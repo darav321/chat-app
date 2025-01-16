@@ -8,7 +8,7 @@ import { server, app } from "./socket/index.js"
 
 dotenv.config()
 app.use(cors({
-    origin: "https://chat-more-zwg6-git-main-varad-kales-projects.vercel.app/",
+    origin: "http://localhost:5173",
     credentials : true
 }))
 app.use(express.json())
