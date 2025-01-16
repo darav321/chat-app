@@ -8,7 +8,7 @@ import { server, app } from "./socket/index.js"
 
 dotenv.config()
 app.use(cors({
-    origin: "https://chatmore-1.onrender.com",
+    origin: "*",
     credentials : true
 }))
 app.use(express.json())
