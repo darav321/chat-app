@@ -42,7 +42,7 @@ const Register = () => {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    const url = "http://localhost:5000/api/user/register";
+    const url = "https://chatmore-vkco.onrender.com/api/user/register";
 
     try {
       const response = await axios.post(url, data);
