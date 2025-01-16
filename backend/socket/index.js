@@ -10,7 +10,7 @@ import { getConversation } from '../helpers/getConversation.js'
 export const server = http.createServer(app)
 const io = new Server(server, {
     cors : {
-        origin: "https://chat-more-zwg6-git-main-varad-kales-projects.vercel.app/",
+        origin: "https://chatmore-1.onrender.com",
         credentials : true
     }
 })
