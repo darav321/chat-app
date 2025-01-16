@@ -21,7 +21,7 @@ const Home = () => {
         url : url,
         withCredentials : true
       })
-
+      console.log("kokokokokok",response)
       dispatch(setUser(response.data.data))
       
     } catch (error) {

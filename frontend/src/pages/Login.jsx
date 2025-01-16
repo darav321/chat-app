@@ -40,8 +40,8 @@ const Register = () => {
       console.log(response);
       toast.success(response.data.message);
 
-      dispatch(setToken(response.data.token));
-      localStorage.setItem("token", response.data.token);
+      dispatch(setToken(response.data.accessToken));
+      localStorage.setItem("token", response.data.accessToken);
 
       setData({
         email: "",
