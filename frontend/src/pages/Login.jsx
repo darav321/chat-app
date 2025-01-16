@@ -28,7 +28,7 @@ const Register = () => {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    const url = "http://localhost:5000/api/user/login";
+    const url = "https://chatmore-vkco.onrender.com/api/user/login";
 
     try {
       const response = await axios({
