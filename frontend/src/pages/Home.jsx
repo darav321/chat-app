@@ -17,7 +17,7 @@ const Home = () => {
     try {
       const url = `${import.meta.env.VITE_BACKEND_URL}/api/user/userDetail`
 
-      const response = await axios.get(url, {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user/userDetail`, {
         withCredentials : true,
         headers: { "Content-Type": "application/json" }
       })
