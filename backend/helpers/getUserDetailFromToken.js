@@ -1,19 +1,39 @@
-import jwt from "jsonwebtoken"
-import User from "../models/user.model.js"
+import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
 
 const getUserDetailFromToken = async (token) => {
-    if(!token) {
-        return {
-            message : "seesion out",
-            logOut : true
+    try {
+        if (!token) {
+            return {
+                message: "Session expired",
+                logOut: true
+            };
         }
+
+        // ✅ Wrap jwt.verify in try-catch to prevent crashes
+        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        
+        // ✅ Fetch user from database
+        const user = await User.findById(decoded._id);
+
+        if (!user) {
+            return {
+                message: "User not found",
+                logOut: true
+            };
+        }
+
+        return user;
+
+    } catch (error) {
+        console.error("Error verifying token:", error);
+
+        // ✅ Handle expired/invalid token properly
+        return {
+            message: "Invalid or expired token",
+            logOut: true
+        };
     }
+};
 
-    const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-
-    const user = await User.findById(decode._id)
-
-    return user
-}
-
-export default getUserDetailFromToken
+export default getUserDetailFromToken;
