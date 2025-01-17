@@ -113,7 +113,7 @@ export const refreshAccessToken = async (req, res) => {
 export const userDetail = async (req, res) => {
     try {
         const token = req.cookies.accessToken
-
+        console.log(token)
         const user = await getUserDetailFromToken(token)
 
         res.status(200).json({message : "User-details", data : user})
