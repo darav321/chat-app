@@ -16,6 +16,11 @@ const io = new Server(server, {
     }
 });
 
+app.use(cors({
+    origin: "https://chatmore-1.onrender.com",
+    credentials: true
+}));
+
 const onlineUser = new Set()
 
 io.on('connection',async (socket)=>{
