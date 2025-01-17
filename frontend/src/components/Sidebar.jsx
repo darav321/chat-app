@@ -42,7 +42,7 @@ const Sidebar = () => {
             className="bg-green-500 rounded-lg px-3 py-2 text-white font-medium"
             onClick={() => {
               toast.dismiss(t.id);
-              const response = axios("http://localhost:5000/api/user/logout", {
+              const response = axios(`${import.meta.env.VITE_BACKEND_URL}/api/user/logout`, {
                 method: "post",
                 withCredentials: true,
               });
