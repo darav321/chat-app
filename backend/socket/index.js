@@ -4,6 +4,7 @@ import http from 'http'
 import getUserDetailFromToken from '../helpers/getUserDetailFromToken.js'
 import User from '../models/user.model.js'
 export const app = express()
+import cors from 'cors'
 import {Conversation,Message} from '../models/conversation.model.js'
 import { getConversation } from '../helpers/getConversation.js'
 
