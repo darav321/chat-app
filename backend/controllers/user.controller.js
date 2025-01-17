@@ -130,7 +130,9 @@ export const logout = async (req, res) => {
             secure: process.env.NODE_ENV === "production", // Only secure in production
             sameSite: "strict",
             expires: new Date(0) // Expires immediately
-        }).cookie("refreshToken", "", {
+        });
+
+        res.cookie("refreshToken", "", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // Only secure in production
             sameSite: "strict",
@@ -139,7 +141,7 @@ export const logout = async (req, res) => {
 
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
-        console.log("Error while logging out", error);
+        console.error("Error while logging out:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
