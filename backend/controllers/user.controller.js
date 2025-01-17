@@ -40,6 +40,9 @@ export const registerUser = async (req, res) => {
         const user = new User(payload)
         const userSave = await user.save()
 
+        res.header("Access-Control-Allow-Origin", "https://chatmore-1.onrender.com");
+        res.header("Access-Control-Allow-Credentials", "true");
+
         res.status(200).json({message : "User registered Successfully", data : userSave})
 
     } catch (error) {
