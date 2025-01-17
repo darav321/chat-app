@@ -30,7 +30,7 @@ const Home = () => {
   }
 
   useEffect(()=>{
-    fetchUserDetails()
+    setTimeout(fetchUserDetails(), 500)
   },[])
 
   useEffect(() => {
