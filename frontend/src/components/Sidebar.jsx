@@ -26,6 +26,7 @@ const Sidebar = () => {
   const socketConnection = useSelector(
     (state) => state?.user?.socketConnection
   );
+  console.log(user)
 
   const [userDetails, setUserDetails] = useState({
     email: "",
