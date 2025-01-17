@@ -9,8 +9,10 @@ import { server, app } from "./socket/index.js"
 dotenv.config()
 app.use(cors({
     origin: ["http://localhost:5173", "https://chatmore-1.onrender.com"],
-    credentials : true
-}))
+    credentials: true, 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],  
+    allowedHeaders: ["Content-Type", "Authorization"],  
+}));
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/user", userRoutes)
