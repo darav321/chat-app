@@ -45,7 +45,10 @@ const Register = () => {
     const url = "https://chatmore-vkco.onrender.com/api/user/register";
 
     try {
-      const response = await axios.post(url, data);
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/register`, data, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" }
+    });
       console.log(response);
       toast.success(response.data.message);
 
