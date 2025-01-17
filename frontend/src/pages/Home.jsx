@@ -34,7 +34,6 @@ const Home = () => {
 
   useEffect(() => {
     const socketConnection = io("https://chatmore-vkco.onrender.com", {
-      transports: ["websocket", "polling"],
       withCredentials: true,
       auth: { token: localStorage.getItem("token") },
     });
