@@ -18,7 +18,8 @@ const Home = () => {
       const url = `${import.meta.env.VITE_BACKEND_URL}/api/user/userDetail`
 
       const response = await axios.get(url, {
-        withCredentials : true
+        withCredentials : true,
+        headers: { "Content-Type": "application/json" }
       })
       console.log("kokokokokok",response)
       dispatch(setUser(response.data.data))
