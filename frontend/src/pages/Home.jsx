@@ -34,7 +34,9 @@ const Home = () => {
   },[])
 
   useEffect(() => {
-    const socketConnection = io(import.meta.env.VITE_BACKEND_URL, {
+    const socketConnection = io("https://chatmore-vkco.onrender.com", {
+      transports: ["websocket", "polling"],
+      withCredentials: true,
       auth: { token: localStorage.getItem("token") },
     });
 
