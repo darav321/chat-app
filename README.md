@@ -32,16 +32,20 @@ ChatMore is a **MERN stack**-based real-time chat application that allows users 
 │   ├── 📁 models (Mongoose schemas)
 │   ├── 📁 routes (API endpoints)
 │   ├── 📁 middleware (Auth & encryption handling)
-│   ├── server.js (Main entry point)
+│   ├── 📁 helpers
+│   ├── 📁 socket(includes socket.io logic)
+│   ├── 📁 utils
+│   ├── index.js (Main entry point)
 │
 ├── 📁 frontend (React.js, Redux, Tailwind CSS)
+│   ├── 📁 helpers
+│   ├── 📁 redux
 │   ├── 📁 src
 │   │   ├── 📁 components
 │   │   ├── 📁 pages
-│   │   ├── 📁 redux
-│   │   ├── 📁 utils
-│   │   ├── App.js
-│   │   ├── index.js
+│   │   ├── 📁 assets
+│   │   ├── App.jsx
+│   │   ├── main.jsx
 │   ├── package.json
 │
 ├── 📄 .env (Environment variables)
