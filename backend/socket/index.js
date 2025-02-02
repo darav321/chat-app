@@ -161,6 +161,6 @@ io.on('connection',async (socket)=>{
   });
 
   socket.on("disconnect", () => {
-    onlineUser.delete(user?._id.toString());
+    onlineUser.delete(user?._id?.toString());
   });
 });
