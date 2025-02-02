@@ -116,10 +116,7 @@ export const loginUser = async (req, res) => {
 export const userDetail = async (req, res) => {
     try {
         const token = req.cookies.accessToken
-<<<<<<< HEAD
-=======
         console.log(token)
->>>>>>> b0868aed78dc12d1f25099f74a1432406d553840
         const user = await getUserDetailFromToken(token)
 
         res.status(200).json({message : "User-details", data : user})
@@ -136,19 +133,7 @@ export const logout = async (req, res) => {
             secure: process.env.NODE_ENV === "production", // Only secure in production
             sameSite: "strict",
             expires: new Date(0) // Expires immediately
-<<<<<<< HEAD
         })
-=======
-        });
-
-        res.cookie("refreshToken", "", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Only secure in production
-            sameSite: "strict",
-            expires: new Date(0) // Expires immediately
-        });
->>>>>>> b0868aed78dc12d1f25099f74a1432406d553840
-
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         console.error("Error while logging out:", error);
