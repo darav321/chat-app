@@ -40,7 +40,7 @@ const Sidebar = () => {
         <div className="flex flex-row gap-3 items-center">
           <button
             className="bg-green-500 rounded-lg px-3 py-2 text-white font-medium"
-            onClick={() => {
+            onClick={ async () => {
               toast.dismiss(t.id);
               const response = axios("http://localhost:5000/api/user/logout", {
                 method: "post",

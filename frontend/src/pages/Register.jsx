@@ -46,7 +46,6 @@ const Register = () => {
 
     try {
       const response = await axios.post(url, data);
-      console.log(response);
       toast.success(response.data.message);
 
       setData({

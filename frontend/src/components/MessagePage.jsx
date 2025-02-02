@@ -122,7 +122,6 @@ const MessagePage = () => {
       });
 
       socketConnection.on("message", (data) => {
-        console.log("message-data", data);
         setAllMessages(data);
       });
     }
@@ -166,7 +165,6 @@ const MessagePage = () => {
           ref={currentMessage}
         >
           {allMessages.map((msg, index) => {
-            console.log(msg);
             const isSent = user._id === msg?.msgByUserId;
 
             return (

@@ -20,8 +20,8 @@ const Home = () => {
       const response = await axios({
         url : url,
         withCredentials : true
+        
       })
-      console.log("kokokokokok",response)
       dispatch(setUser(response.data.data))
       
     } catch (error) {
@@ -38,17 +38,14 @@ const Home = () => {
       auth: { token: localStorage.getItem("token") },
     });
 
-    console.log("Setting socket connection in Redux...");
     dispatch(setSocketConnection(socketConnection));
   
     socketConnection.on("onlineUser", (data) => {
-      console.log("Online users received:", data);
       dispatch(setOnlineUser(data)); 
     });
   
   
     return () => {
-      console.log("Disconnecting socket...");
       socketConnection.disconnect();
     };
   }, [dispatch]);

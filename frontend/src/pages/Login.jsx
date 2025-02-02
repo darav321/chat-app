@@ -37,7 +37,6 @@ const Register = () => {
         data: { email: data.email, password: data.password },
         withCredentials: true,
       });
-      console.log(response);
       toast.success(response.data.message);
 
       dispatch(setToken(response.data.accessToken));

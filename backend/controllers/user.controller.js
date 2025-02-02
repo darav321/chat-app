@@ -3,19 +3,19 @@ import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken"
 import getUserDetailFromToken from "../helpers/getUserDetailFromToken.js"
 
-const generateAccessAndRefreshToken = async (userid) => {
-    try {
-        const user = await User.findById(userid)
-        const accessToken = user.generateAccessToken()
-        const refreshToken = user.generateRefreshToken()
+// const generateAccessAndRefreshToken = async (userid) => {
+//     try {
+//         const user = await User.findById(userid)
+//         const accessToken = user.generateAccessToken()
+//         const refreshToken = user.generateRefreshToken()
 
-        user.refreshToken = refreshToken
-        await user.save({validateBeforeSave : false})
-        return {accessToken, refreshToken}
-    } catch (error) {
-        return res.status(500).json({message : "Internal server error"})
-    }
-}
+//         user.refreshToken = refreshToken
+//         await user.save({validateBeforeSave : false})
+//         return {accessToken, refreshToken}
+//     } catch (error) {
+//         return res.status(500).json({message : "Internal server error"})
+//     }
+// }
 
 export const registerUser = async (req, res) => {
     try {
@@ -64,56 +64,55 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({message : "Invalid User credentials"})
         }
 
-        const {accessToken, refreshToken} = await generateAccessAndRefreshToken(useremail._id)
+        const accessToken = await useremail.generateAccessToken(useremail._id)
 
         const cookieOptions = {
             httpOnly : true,
             secure : true
         }
 
-        res.status(200).cookie('accessToken', accessToken, cookieOptions).cookie('refreshToken', refreshToken, cookieOptions).json({message : "Login Successfull", accessToken : accessToken, refreshToken : refreshToken})
+        res.status(200).cookie('accessToken', accessToken, cookieOptions).json({message : "Login Successfull", accessToken : accessToken})
     } catch (error) {
         console.log("Error while signing in the user")
         res.status(500).json({message : "Internal Server error"})
     }
 }
 
-export const refreshAccessToken = async (req, res) => {
-    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+// export const refreshAccessToken = async (req, res) => {
+//     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
-    if(!incomingRefreshToken) {
-        return res.status(401).json({message : "Unauthorized request"})
-    }
-    try {
-        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
+//     if(!incomingRefreshToken) {
+//         return res.status(401).json({message : "Unauthorized request"})
+//     }
+//     try {
+//         const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
 
-        const user = await User.findById(decodedToken?._id)
+//         const user = await User.findById(decodedToken?._id)
 
-        if(!user) {
-            return res.status(401).json({messgae : "Inavlid refresh token"})
-        }
+//         if(!user) {
+//             return res.status(401).json({messgae : "Inavlid refresh token"})
+//         }
 
-        if(incomingRefreshToken !== user.refreshToken) {
-            return res.status(401).josn({message : "Refresh token is invalid or used"})
-        }
+//         if(incomingRefreshToken !== user.refreshToken) {
+//             return res.status(401).josn({message : "Refresh token is invalid or used"})
+//         }
 
-        const options = {
-            httpOnly : true,
-            secure : true
-        }
+//         const options = {
+//             httpOnly : true,
+//             secure : true
+//         }
 
-        const {accessToken, newRefreshToken} = await generateAccessAndRefreshToken(user._id)
+//         const {accessToken, newRefreshToken} = await generateAccessAndRefreshToken(user._id)
 
-        res.status(200).cookie('accessToken', accessToken, options).cookie('refreshToken', newRefreshToken, options).json({message : "Access Token refreshed", accessToken : accessToken, refreshToken : newRefreshToken})
-    } catch (error) {
-        return res.status(500).json({message : "Invalid refresh token"})
-    }
-}
+//         res.status(200).cookie('accessToken', accessToken, options).cookie('refreshToken', newRefreshToken, options).json({message : "Access Token refreshed", accessToken : accessToken, refreshToken : newRefreshToken})
+//     } catch (error) {
+//         return res.status(500).json({message : "Invalid refresh token"})
+//     }
+// }
 
 export const userDetail = async (req, res) => {
     try {
         const token = req.cookies.accessToken
-
         const user = await getUserDetailFromToken(token)
 
         res.status(200).json({message : "User-details", data : user})
@@ -130,12 +129,7 @@ export const logout = async (req, res) => {
             secure: process.env.NODE_ENV === "production", // Only secure in production
             sameSite: "strict",
             expires: new Date(0) // Expires immediately
-        }).cookie("refreshToken", "", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Only secure in production
-            sameSite: "strict",
-            expires: new Date(0) // Expires immediately
-        });
+        })
 
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
