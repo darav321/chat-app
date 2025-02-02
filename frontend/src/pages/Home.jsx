@@ -33,7 +33,7 @@ const Home = () => {
   },[])
 
   useEffect(() => {
-    const socketConnection = io("https://chatmore-vkco.onrender.com", {
+    const socketConnection = io("https://chat-app-vuuf.onrender.com", {
       withCredentials: true,
       auth: { token: localStorage.getItem("token") },
     });

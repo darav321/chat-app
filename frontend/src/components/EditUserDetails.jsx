@@ -41,7 +41,7 @@ const EditUserDetails = ({ onClose, user }) => {
 
     try {
       const response = await axios.patch(
-        "https://chatmore-vkco.onrender.com/api/user/update"
+        "https://chat-app-vuuf.onrender.com/api/user/update"
       );
       toast.success(response.data.message)
       dispatch(setUser(data));

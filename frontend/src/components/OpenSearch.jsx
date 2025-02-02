@@ -12,7 +12,7 @@ const OpenSearch = ({ onClose }) => {
   const [search, setSearch] = useState("");
 
   const handleSearchUser = async () => {
-    const url = `${import.meta.env.VITE_BACKEND_URL}/api/user/search`;
+    const url = `https://chat-app-vuuf.onrender.com/api/user/search`;
     try {
       setLoading(true);
       const response = await axios.post(url, {

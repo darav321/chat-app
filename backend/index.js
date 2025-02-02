@@ -9,7 +9,7 @@ import path from "path"
 
 dotenv.config()
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://chat-app-vuuf.onrender.com",
     credentials : true
 }))
 app.use(express.json())
