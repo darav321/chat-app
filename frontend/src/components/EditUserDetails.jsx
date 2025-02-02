@@ -41,7 +41,7 @@ const EditUserDetails = ({ onClose, user }) => {
 
     try {
       const response = await axios.patch(
-        "http://localhost:5000/api/user/update"
+        "https://chatmore-vkco.onrender.com/api/user/update"
       );
       toast.success(response.data.message)
       dispatch(setUser(data));

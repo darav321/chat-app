@@ -20,7 +20,6 @@ const Home = () => {
       const response = await axios({
         url : url,
         withCredentials : true
-        
       })
       dispatch(setUser(response.data.data))
       
@@ -30,11 +29,12 @@ const Home = () => {
   }
 
   useEffect(()=>{
-    fetchUserDetails()
+    setTimeout(fetchUserDetails(), 500)
   },[])
 
   useEffect(() => {
-    const socketConnection = io(import.meta.env.VITE_BACKEND_URL, {
+    const socketConnection = io("https://chatmore-vkco.onrender.com", {
+      withCredentials: true,
       auth: { token: localStorage.getItem("token") },
     });
 

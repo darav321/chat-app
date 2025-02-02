@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from "express";
 import { Server } from "socket.io";
 import http from "http";
@@ -6,9 +7,21 @@ import User from "../models/user.model.js";
 export const app = express();
 import { Conversation, Message } from "../models/conversation.model.js";
 import { getConversation } from "../helpers/getConversation.js";
+=======
+import express from 'express'
+import {Server} from 'socket.io'
+import http from 'http'
+import getUserDetailFromToken from '../helpers/getUserDetailFromToken.js'
+import User from '../models/user.model.js'
+export const app = express()
+import cors from 'cors'
+import {Conversation,Message} from '../models/conversation.model.js'
+import { getConversation } from '../helpers/getConversation.js'
+>>>>>>> b0868aed78dc12d1f25099f74a1432406d553840
 
 export const server = http.createServer(app);
 const io = new Server(server, {
+<<<<<<< HEAD
   cors: {
     origin: "http://localhost:5173",
     credentials: true,
@@ -53,6 +66,65 @@ io.on("connection", async (socket) => {
       socket.emit("message", getConversation.messages);
     }
   });
+=======
+    cors: {
+        origin: ["http://localhost:5173", "https://chatmore-1.onrender.com"],
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
+
+app.use(cors({
+    origin: "https://chatmore-1.onrender.com",
+    credentials: true
+}));
+
+const onlineUser = new Set()
+
+io.on('connection',async (socket)=>{
+    console.log("connect user", socket.id)
+
+    const token = socket.handshake.auth.token
+
+    console.log(token)
+
+    const user = await getUserDetailFromToken(token)
+
+    socket.join(user?._id?.toString())
+    onlineUser.add(user?._id?.toString())
+
+    io.emit('onlineUser', Array.from(onlineUser))
+
+    socket.on('message', async (userid) => {
+        console.log('Received message event with userid:', userid);
+        const userDetails = await User.findById(userid).select("-password");
+    
+        const payload = {
+            _id: userDetails._id,
+            name: userDetails.name,
+            profilePic: userDetails.profilePic,
+            email: userDetails.email,
+            online: onlineUser.has(userid),
+        };
+    
+        console.log('Emitting message-user with payload:', payload);
+        socket.emit('message-user', payload);  // Emit back to the sender
+
+        const getConversation = await Conversation.findOne({
+            $or : [
+                {sender:user?._id?.toString(), reciever:userid},
+                {sender:userid, reciever:user?._id?.toString()}
+            ]
+        }).sort({updatedAt : -1}).populate('messages')
+
+        console.log(getConversation)
+
+        if(getConversation?.messages){
+            socket.emit("message", getConversation.messages)
+        }
+        
+
+>>>>>>> b0868aed78dc12d1f25099f74a1432406d553840
 
   socket.on("new-msg", async (data) => {
     let conversation = await Conversation.findOne({

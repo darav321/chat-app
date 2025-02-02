@@ -26,6 +26,7 @@ const Sidebar = () => {
   const socketConnection = useSelector(
     (state) => state?.user?.socketConnection
   );
+  console.log(user)
 
   const [userDetails, setUserDetails] = useState({
     email: "",
@@ -42,10 +43,10 @@ const Sidebar = () => {
             className="bg-green-500 rounded-lg px-3 py-2 text-white font-medium"
             onClick={ async () => {
               toast.dismiss(t.id);
-              const response = axios("http://localhost:5000/api/user/logout", {
-                method: "post",
-                withCredentials: true,
+              const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user/logout`, {}, {
+                  withCredentials: true,
               });
+
               dispatch(logOut(user));
               localStorage.removeItem("token");
               sessionStorage.removeItem("token");
