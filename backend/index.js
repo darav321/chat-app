@@ -12,6 +12,8 @@ app.use(cors({
     origin: "https://chat-app-vuuf.onrender.com",
     credentials : true
 }))
+
+const _dirname = path.resolve()
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/user", userRoutes)
